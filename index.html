@@ -326,6 +326,14 @@ $(document).ready(function () {
 <li><code>data/nw2011.rda</code>: Individual level data</li>
 <li><code>data/nw2011_ethnicities</code>: Ethnic group level averages</li>
 </ul>
+<p>Load the data</p>
+<pre class="r"><code>(data(&quot;nw2011&quot;))</code></pre>
+<pre><code>## [1] &quot;nw2011&quot;</code></pre>
+<pre class="r"><code>(data(&quot;nw2011_ethnicites&quot;))</code></pre>
+<pre><code>## Warning in data(&quot;nw2011_ethnicites&quot;): data set 'nw2011_ethnicites' not
+## found</code></pre>
+<pre><code>## [1] &quot;nw2011_ethnicites&quot;</code></pre>
+<p>Note: this works because <code>data()</code> looks for datasets in <code>./data</code> before looking in packages.</p>
 </div>
 <div id="model" class="section level2">
 <h2>Model</h2>

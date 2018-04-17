@@ -32,6 +32,15 @@ There are two datasets
 -   `data/nw2011.rda`: Individual level data
 -   `data/nw2011_ethnicities`: Ethnic group level averages
 
+Load the data
+```{r}
+(data("nw2011"))
+```
+```{r}
+(data("nw2011_ethnicites"))
+```
+Note: this works because `data()` looks for datasets in `./data` before looking in packages.
+
 ## Model
 
 TODO
