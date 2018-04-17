@@ -1,0 +1,124 @@
+---
+title: "Clean Nunn-Wantchekon AER 2011 Data"
+author: "Jeffrey Arnold"
+date: "4/17/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Download the replication data for
+
+> Nunn, Nathan, and Leonard Wantchekon. 2011. "The Slave Trade and the Origins of Mistrust in Africa." American Economic Review, 101 (7): 3221-52. DOI:10.1257/aer.101.7.3221
+
+Clean the data and save to R objects in `data/`.
+
+In addition to the original individual-level data, this will also create a ethnic group level dataset, as was used in one of the replications.
+
+# Prerequisites 
+
+```{r message=FALSE}
+library("tidyverse")
+library("haven")
+library("recipes")
+library("httr")
+```
+
+```{r}
+DATA_DIR <- here::here("data")
+dir.create(DATA_DIR, showWarnings = FALSE)
+```
+
+# Download
+
+Download replication zip file if it does not exist.
+
+```{r}
+URL <- "https://www.aeaweb.org/aer/data/dec2011/20090252_data.zip"
+DOWNLOAD_DIR <- here::here("downloads")
+zip_file <- file.path(DOWNLOAD_DIR, basename(URL))
+  
+dir.create(file.path(DOWNLOAD_DIR), showWarnings = FALSE)
+if (!file.exists(zip_file)) {
+  GET(URL, write_disk(zip_file))  
+}
+```
+
+# Individual Level Data
+
+Clean the dataset largely to account for differences in how R and Stata model data.
+
+```{r}
+dta_file <- "NUNN_WANTCHEKON_AER_2011_REPLICATION_FILES/Nunn_Wantchekon_AER_2011.dta"
+nw2011 <- read_dta(unz(zip_file, dta_file)) %>%
+  mutate_if(is.labelled, haven::as_factor) %>%
+  mutate_at(vars(religion, education, occupation, living_conditions,
+                 v30), funs(as.factor)) %>%
+  mutate(v33 = as.numeric(v33))
+```
+
+```{r}
+save(nw2011, file = file.path(DATA_DIR, "nw2011.rda"),
+     compress = "bzip2")
+```
+
+
+# Ethnicity-Level data
+
+The main treatment variable (extent of slavery) is defined at the ethnicity level.
+Create an ethnicity-level dataset, with averages of the other variables.
+This was one of the robustness checks in the Nunn-Wantchekon paper.
+
+```{r}
+nw2011_ethnicities <- 
+  recipe(~ ., data = nw2011)  %>%
+  step_dummy(isocode) %>%
+  step_dummy(religion) %>%
+  step_dummy(education) %>%
+  step_dummy(occupation) %>%
+  step_dummy(living_conditions) %>%
+  step_dummy(v30) %>%
+  prep(train = nw2011, retain = TRUE) %>%
+  juice()
+
+nw2011_ethnicities <- nw2011 %>%
+  filter(murdock_name != "") %>%
+  group_by(murdock_name) %>%
+  summarise_at(vars(age, male, urban_dum, 
+                    matches("^occupation_"),                    
+                    matches("^living_condition_"),
+                    matches("^education_"),
+                    matches("^religion_"),
+                    # other controls
+                    ln_init_pop_density,
+                    malaria_ecology,
+                    total_missions_area,
+                    explorer_contact,
+                    railway_contact,
+                    cities_1400_dum,
+                    matches("^v30_"),
+                    v33,
+                    # treatment
+                    exports, export_area, export_pop, ln_export_area,
+ln_export_pop,
+                    trust_neighbors, trust_relatives, trust_local_council,
+                    # covariate
+                    intra_group_trust, inter_group_trust,
+                    district_ethnic_frac, frac_ethnicity_in_district
+                    ),
+               funs(mean(., na.rm = TRUE)))
+
+```
+
+```{r}
+save(nw2011_ethnicities, file = file.path(DATA_DIR, "nw2011_ethnicities.rda"),
+     compress = "bzip2")
+```
+
+# Original Programming Environment
+
+```{r}
+sessionInfo()
+```

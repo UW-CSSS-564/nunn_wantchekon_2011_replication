@@ -1,0 +1,42 @@
+---
+title: "Replicating the Nunn and Wantchekon (2011) 'The Slave Trade and the Origins of Mistrust in Africa'"
+author: "Jeffrey B. Arnold"
+output: html_document
+---
+
+## Introduction
+
+This will replicate Nunn and Wantchekon (2011) "[The Slave Trade and the Origins of Mistrust in Africa](https://www.aeaweb.org/articles?id=10.1257/aer.101.7.3221)" using Bayesian statistical methods.
+
+The abstract for this paper is
+
+> We show that current differences in trust levels within Africa can be
+> traced back to the transatlantic and Indian Ocean slave trades.
+> Combining contemporary individual-level survey data with historical data
+> on slave shipments by ethnic group, we find that individuals whose
+> ancestors were heavily raided during the slave trade are less trusting
+> today. Evidence from a variety of identification strategies suggests
+> that the relationship is causal. Examining causal mechanisms, we show
+> that most of the impact of the slave trade is through factors that are
+> internal to the individual, such as cultural norms, beliefs, and values.
+
+You can also read the author's summary [here](https://voxeu.org/article/understanding-long-run-effects-africa-s-slave-trades).
+
+## Data
+
+Replication data for this paper is available on the *American Economic Review* page for the [article](https://www.aeaweb.org/aer/data/dec2011/20090252_data.zip).
+This project contains cleaned versions or the original data, created by the `clean.Rmd` file.
+
+There are two datasets 
+
+-   `data/nw2011.rda`: Individual level data
+-   `data/nw2011_ethnicities`: Ethnic group level averages
+
+## Model
+
+TODO
+
+## References
+
+-   Nunn, Nathan, and Leonard Wantchekon. 2011. "[The Slave Trade and the Origins of Mistrust in Africa](https://dx.doi.org/10.1257/aer.101.7.3221)" *American Economic Review*, 101 (7): 3221-52.
+-   Nathan Nunn (2017) [Understanding the long-run effects of Africa’s slave trades](https://voxeu.org/article/understanding-long-run-effects-africa-s-slave-trades) Vox.eu
