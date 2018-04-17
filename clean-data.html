@@ -366,6 +366,8 @@ nw2011 &lt;- read_dta(unz(zip_file, dta_file)) %&gt;%
 nw2011_ethnicities &lt;- nw2011 %&gt;%
   filter(murdock_name != &quot;&quot;) %&gt;%
   group_by(murdock_name) %&gt;%
+  # add this here so I can simply use the mean in the next step
+  mutate(nobs = n()) %&gt;%
   summarise_at(vars(age, male, urban_dum, 
                     matches(&quot;^occupation_&quot;),                    
                     matches(&quot;^living_condition_&quot;),
@@ -381,12 +383,13 @@ nw2011_ethnicities &lt;- nw2011 %&gt;%
                     matches(&quot;^v30_&quot;),
                     v33,
                     # treatment
-                    exports, export_area, export_pop, ln_export_area,
-ln_export_pop,
+                    exports, export_area, export_pop, ln_export_area, 
+                    ln_export_pop,
                     trust_neighbors, trust_relatives, trust_local_council,
                     # covariate
                     intra_group_trust, inter_group_trust,
-                    district_ethnic_frac, frac_ethnicity_in_district
+                    district_ethnic_frac, frac_ethnicity_in_district,
+                    nobs
                     ),
                funs(mean(., na.rm = TRUE)))</code></pre>
 <pre class="r"><code>save(nw2011_ethnicities, file = file.path(DATA_DIR, &quot;nw2011_ethnicities.rda&quot;),

@@ -86,6 +86,8 @@ nw2011_ethnicities <-
 nw2011_ethnicities <- nw2011 %>%
   filter(murdock_name != "") %>%
   group_by(murdock_name) %>%
+  # add this here so I can simply use the mean in the next step
+  mutate(nobs = n()) %>%
   summarise_at(vars(age, male, urban_dum, 
                     matches("^occupation_"),                    
                     matches("^living_condition_"),
@@ -101,12 +103,13 @@ nw2011_ethnicities <- nw2011 %>%
                     matches("^v30_"),
                     v33,
                     # treatment
-                    exports, export_area, export_pop, ln_export_area,
-ln_export_pop,
+                    exports, export_area, export_pop, ln_export_area, 
+                    ln_export_pop,
                     trust_neighbors, trust_relatives, trust_local_council,
                     # covariate
                     intra_group_trust, inter_group_trust,
-                    district_ethnic_frac, frac_ethnicity_in_district
+                    district_ethnic_frac, frac_ethnicity_in_district,
+                    nobs
                     ),
                funs(mean(., na.rm = TRUE)))
 
