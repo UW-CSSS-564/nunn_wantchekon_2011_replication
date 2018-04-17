@@ -1,5 +1,5 @@
 ---
-title: "Replicating the Nunn and Wantchekon (2011) 'The Slave Trade and the Origins of Mistrust in Africa'"
+title: "Replication of Nunn and Wantchekon (2011) 'The Slave Trade and the Origins of Mistrust in Africa'"
 author: "Jeffrey B. Arnold"
 output: html_document
 ---
