@@ -2,6 +2,8 @@
 title: "Replication of Nunn and Wantchekon (2011) 'The Slave Trade and the Origins of Mistrust in Africa'"
 author: "Jeffrey B. Arnold"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Introduction
@@ -22,6 +24,14 @@ The abstract for this paper is
 
 You can also read the author's summary [here](https://voxeu.org/article/understanding-long-run-effects-africa-s-slave-trades).
 
+## Prerequisites
+
+```{r}
+library("tidyverse")
+library("rstan")
+```
+
+
 ## Data
 
 Replication data for this paper is available on the *American Economic Review* page for the [article](https://www.aeaweb.org/aer/data/dec2011/20090252_data.zip).
@@ -37,13 +47,37 @@ Load the data
 (data("nw2011"))
 ```
 ```{r}
-(data("nw2011_ethnicites"))
+(data("nw2011_ethnicities"))
 ```
 Note: this works because `data()` looks for datasets in `./data` before looking in packages.
 
 ## Model
 
-TODO
+### Normal-No Covariates
+
+What's in the data?
+```{r results='hide'}
+glimpse(nw2011_ethnicities)
+```
+
+```{r}
+ggplot(nw2011_ethnicities, aes(x = trust_neighbors)) +
+  geom_density() + 
+  geom_rug()
+```
+
+# No-Covariate Models
+
+```{r}
+data <- list(y = na.omit(nw2011_ethnicities$trust_neighbors))
+data$n <- length(data$y)
+```
+```{r}
+mod1 <- stan("stan/mean.stan", data = data)
+```
+
+
+
 
 ## References
 
